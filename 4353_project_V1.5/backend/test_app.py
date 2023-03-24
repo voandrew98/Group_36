@@ -35,7 +35,13 @@ class TestApp(TestCase):
         response = self.client.get(url_for('fquote'))
         self.assertEqual(response.status_code, 200)
         
+    def test_hquote(self):
+        response = self.client.get(url_for('hquote'))
+        self.assertEqual(response.status_code, 200)
 
+    def test_view(self):
+        response = self.client.get(url_for('view'))
+        self.assertEqual(response.status_code, 200)
 
 if __name__ == '__main__':
     unittest.main()
