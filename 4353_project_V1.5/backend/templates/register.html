@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+
+{% block content %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+    {% for msg in messages%} 
+        <p>{{msg}}</p>
+    {% endfor %}
+{% endif %}
+{% endwith %}
+<form action = "#" method = "post">
+<p></p>
+<div>
+<label for="username">Create Username:</label>
+<p><input type = "text" name="nm" /></p>
+</div>
+
+<div>
+<label for="pass">Create Password (8 characters minimum):</label>
+<p><input type = "password" id="pass" name="password"
+minlength="8" required></p>
+</div>
+
+<p><input type = "submit" value="Sign Up" /></p>
+</form>
+{% endblock %}
