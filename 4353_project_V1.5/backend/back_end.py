@@ -60,6 +60,10 @@ def logout():
     session.pop("user", None) #remove user data
     return redirect(url_for("login"))
 
+@app.route("/fquote", methods=["POST", "GET"])
+def fquote():
+    return render_template("fquote.html") ##this html creates a form 
+
 if __name__ == "__main__":
     app.run(debug=True) #dont have to rerun server everytime we make change
 
