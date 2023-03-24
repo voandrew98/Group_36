@@ -64,6 +64,10 @@ def logout():
 def fquote():
     return render_template("fquote.html") ##this html creates a form 
 
+@app.route("/hquote", methods=["POST", "GET"])
+def hquote():
+    return render_template("hquote.html")
+
 if __name__ == "__main__":
     app.run(debug=True) #dont have to rerun server everytime we make change
 
