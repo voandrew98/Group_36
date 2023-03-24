@@ -14,21 +14,21 @@ app.permanent_session_lifetime = timedelta(minutes = 5)
 
 @app.route("/") 
 def home():
-    return render_template("index.html") #pass variable content to html
+    return render_template("index.html")
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
     if request.method == "POST":
         session.permanent = True
-        user = request.form["nm"] #nm data form
-        session["user"] = user #session stores data
+        user = request.form["nm"]
+        session["user"] = user
         flash(f"Login Successful!")
-        return redirect(url_for("user")) #submit button will redirect us to users name @app.route(usr)
-    else: #if "get" request
+        return redirect(url_for("user"))
+    else:
         if "user" in session:
             flash(f"Already Logged In!")
             return redirect(url_for("user"))
-        return render_template("login.html") ##this html creates a form 
+        return render_template("login.html")
     
 @app.route("/register", methods=["POST", "GET"])
 def register():
