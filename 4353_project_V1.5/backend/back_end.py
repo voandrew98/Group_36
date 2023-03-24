@@ -68,6 +68,12 @@ def fquote():
 def hquote():
     return render_template("hquote.html")
 
+@app.route("/view", methods=["POST", "GET"])
+def view():
+    return render_template("view.html")
+
 if __name__ == "__main__":
     app.run(debug=True) #dont have to rerun server everytime we make change
+    
+
 
