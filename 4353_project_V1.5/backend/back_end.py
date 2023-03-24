@@ -54,7 +54,6 @@ def user():
         return redirect(url_for("login"))
 
     
-    apples
 @app.route("/logout")
 def logout():
     flash(f"You have been logged out!", "info")
