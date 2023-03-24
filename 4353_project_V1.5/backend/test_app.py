@@ -15,6 +15,10 @@ class TestApp(TestCase):
         response = self.client.get(url_for('home'))
         self.assertEqual(response.status_code, 200)
         
+    def test_login(self):
+        response = self.client.get(url_for('login'))
+        self.assertEqual(response.status_code, 200)
+        
     def test_register(self):
         response = self.client.get(url_for('register'))
         self.assertEqual(response.status_code, 200)
@@ -26,6 +30,10 @@ class TestApp(TestCase):
     def test_logout(self):
         response = self.client.get(url_for('logout'))
         self.assertEqual(response.status_code, 302)
+       
+    def test_fquote(self):
+        response = self.client.get(url_for('fquote'))
+        self.assertEqual(response.status_code, 200)
         
 
 
