@@ -15,6 +15,20 @@ class User(db.Model): #added
 
     def __repr__(self):
         return '<User %r>' % self.username
+    
+class FuelQuote(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    gallons_requested = db.Column(db.Float, nullable=False)
+    delivery_address = db.Column(db.String(255), nullable=False)
+    delivery_date = db.Column(db.DateTime, nullable=False)
+    price_per_gallon = db.Column(db.Float, nullable=False)
+    total_amount_due = db.Column(db.Float, nullable=False)
+
+    user = db.relationship("User", backref=db.backref("fuel_quotes", cascade="all, delete-orphan"))
+
+    def __repr__(self):
+        return f"<FuelQuote {self.id}>"
 
 @app.route("/") 
 def home():
