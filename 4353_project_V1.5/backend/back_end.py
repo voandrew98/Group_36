@@ -77,6 +77,25 @@ def hquote():
 @app.route("/view", methods=["POST", "GET"])
 def view():
     return render_template("view.html")
+@app.route("/delete", methods=["POST"]) #added
+def delete():
+    if "user" in session:
+        user = session["user"]
+        found_user = User.query.filter_by(username=user).first()
+        if found_user:
+            db.session.delete(found_user)
+            db.session.commit()
+            session.pop("user", None)
+            flash(f"Your account has been deleted!", "info")
+        else:
+            flash(f"Error: Unable to delete your account.", "error")
+    else:
+        flash(f"You are not logged in!", "warning")
+    return redirect(url_for("home"))
+#    Check if the user is logged in.
+#    If the user is logged in, delete their account from the database.
+#   Remove their session data and log them out.
+#   Redirect them to the home page with a flash message indicating that their account has been deleted.
 
 if __name__ == "__main__":
     app.run(debug=True) #dont have to rerun server everytime we make change
