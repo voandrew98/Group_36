@@ -96,9 +96,11 @@ def delete():
 #    If the user is logged in, delete their account from the database.
 #   Remove their session data and log them out.
 #   Redirect them to the home page with a flash message indicating that their account has been deleted.
-
 if __name__ == "__main__":
-    app.run(debug=True) #dont have to rerun server everytime we make change
+    with app.app_context(): #added
+        db.create_all() # added
+    app.run(debug=True)
+    
     
 
 
