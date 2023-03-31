@@ -14,10 +14,7 @@ class User(db.Model): #added
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
 
-    def __repr__(self):
-        return '<User %r>' % self.username
-    
-class FuelQuote(db.Model):
+class FuelQuote(db.Model): #added
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     gallons_requested = db.Column(db.Float, nullable=False)
@@ -30,6 +27,9 @@ class FuelQuote(db.Model):
 
     def __repr__(self):
         return f"<FuelQuote {self.id}>"
+
+    def __repr__(self):
+        return '<User %r>' % self.username
 
 @app.route("/") 
 def home():
@@ -89,7 +89,8 @@ def logout():
     session.pop("user", None)
     return redirect(url_for("login"))
 
-@app.route("/fquote", methods=["POST", "GET"])
+
+@app.route("/fquote", methods=["POST", "GET"]) #added
 def fquote():
     if "user" in session:
         user = session["user"]
@@ -116,7 +117,9 @@ def fquote():
     else:
         flash("You are not logged in!")
         return redirect(url_for("login"))
-@app.route("/hquote", methods=["POST", "GET"])
+
+
+@app.route("/hquote", methods=["POST", "GET"]) #added
 def hquote():
     if "user" in session:
         user = session["user"]
