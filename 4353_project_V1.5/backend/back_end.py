@@ -116,10 +116,16 @@ def fquote():
     else:
         flash("You are not logged in!")
         return redirect(url_for("login"))
-
 @app.route("/hquote", methods=["POST", "GET"])
 def hquote():
-    return render_template("hquote.html")
+    if "user" in session:
+        user = session["user"]
+        found_user = User.query.filter_by(username=user).first()
+        quotes = FuelQuote.query.filter_by(user_id=found_user.id).all()
+        return render_template("hquote.html", quotes=quotes)
+    else:
+        flash("You are not logged in!")
+        return redirect(url_for("login"))
 
 @app.route("/view", methods=["POST", "GET"])
 def view():
