@@ -16,45 +16,53 @@ class User(db.Model): #added
     def __repr__(self):
         return '<User %r>' % self.username
 
-#need to define secret key to USE session
-
 @app.route("/") 
 def home():
     return render_template("index.html")
 
-@app.route("/login", methods=["POST", "GET"])
+@app.route("/login", methods=["POST", "GET"]) #added
 def login():
     if request.method == "POST":
         session.permanent = True
-        user = request.form["nm"]
-        session["user"] = user
-        flash(f"Login Successful!")
-        return redirect(url_for("user"))
+        user_identifier = request.form["nm"]
+        found_user = User.query.filter((User.username == user_identifier) | (User.email == user_identifier)).first()
+        if found_user:
+            session["user"] = found_user.username
+            flash(f"Login Successful!")
+            return redirect(url_for("user"))
+        else:
+            flash(f"Invalid credentials. Please try again.")
+            return render_template("login.html")
     else:
         if "user" in session:
             flash(f"Already Logged In!")
             return redirect(url_for("user"))
         return render_template("login.html")
-    
+#This updated implementation uses SQLAlchemy's filter and first methods to query the database for a user 
+# with the submitted username or email. If the user is found, they are logged in; otherwise, an error message is displayed.
 @app.route("/register", methods=["POST", "GET"])
 def register():
     if request.method == "POST":
+        username = request.form["username"]
+        email = request.form["email"]
+        new_user = User(username=username, email=email)
+        db.session.add(new_user)
+        db.session.commit()
         session.permanent = True
-        user = request.form["nm"] #nm data form
-        session["user"] = user #session stores data
+        session["user"] = username
         flash(f"Sign Up Successful!")
-        return redirect(url_for("user")) #submit button will redirect us to users name @app.route(usr)
-    else: #if "get" request
+        return redirect(url_for("user"))
+    else:
         if "user" in session:
             flash(f"Already Logged In!")
             return redirect(url_for("user"))
-        return render_template("register.html") ##this html creates a form 
-
+        return render_template("register.html")
+    
 @app.route("/user")
 def user():
-    if "user" in session: #check if user in session
+    if "user" in session:
         user = session["user"]
-        return render_template("user.html",user = user)
+        return render_template("user.html", user=user)
     else:
         flash(f"You are not logged in!")
         return redirect(url_for("login"))
@@ -63,12 +71,12 @@ def user():
 @app.route("/logout")
 def logout():
     flash(f"You have been logged out!", "info")
-    session.pop("user", None) #remove user data
+    session.pop("user", None)
     return redirect(url_for("login"))
 
 @app.route("/fquote", methods=["POST", "GET"])
 def fquote():
-    return render_template("fquote.html") ##this html creates a form 
+    return render_template("fquote.html")
 
 @app.route("/hquote", methods=["POST", "GET"])
 def hquote():
@@ -77,6 +85,7 @@ def hquote():
 @app.route("/view", methods=["POST", "GET"])
 def view():
     return render_template("view.html")
+
 @app.route("/delete", methods=["POST"]) #added
 def delete():
     if "user" in session:
@@ -96,11 +105,8 @@ def delete():
 #    If the user is logged in, delete their account from the database.
 #   Remove their session data and log them out.
 #   Redirect them to the home page with a flash message indicating that their account has been deleted.
+
 if __name__ == "__main__":
     with app.app_context(): #added
         db.create_all() # added
     app.run(debug=True)
-    
-    
-
-
