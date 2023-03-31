@@ -1,13 +1,11 @@
-from ast import main
+from flask_sqlalchemy import SQLAlchemy #added
 from flask import Flask, redirect, url_for, render_template, request, session, flash
-#redirect and url_for will allow me to return a redirect for a specific function
-
-from datetime import timedelta #permanent session
-
+from datetime import timedelta
 
 app = Flask(__name__)
 app.secret_key = "hello"
-app.permanent_session_lifetime = timedelta(minutes = 5)
+app.permanent_session_lifetime = timedelta(minutes=5)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db' #added
 
 
 #need to define secret key to USE session
