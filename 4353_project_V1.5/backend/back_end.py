@@ -91,7 +91,31 @@ def logout():
 
 @app.route("/fquote", methods=["POST", "GET"])
 def fquote():
-    return render_template("fquote.html")
+    if "user" in session:
+        user = session["user"]
+        found_user = User.query.filter_by(username=user).first()
+
+        if request.method == "POST":
+            gallons_requested = float(request.form["gallons_requested"])
+            delivery_address = request.form["delivery_address"]
+            delivery_date = datetime.strptime(request.form["delivery_date"], '%Y-%m-%d')
+            price_per_gallon = 1.50  # Calculate price per gallon based on your pricing module
+            total_amount_due = gallons_requested * price_per_gallon
+
+            new_quote = FuelQuote(user_id=found_user.id, gallons_requested=gallons_requested,
+                                  delivery_address=delivery_address, delivery_date=delivery_date,
+                                  price_per_gallon=price_per_gallon, total_amount_due=total_amount_due)
+
+            db.session.add(new_quote)
+            db.session.commit()
+
+            flash("Fuel quote created successfully!")
+            return render_template("fquote.html")
+        else:
+            return render_template("fquote.html")
+    else:
+        flash("You are not logged in!")
+        return redirect(url_for("login"))
 
 @app.route("/hquote", methods=["POST", "GET"])
 def hquote():
