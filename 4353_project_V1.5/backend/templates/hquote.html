@@ -1,95 +1,29 @@
-{% extends "base.html" %} 
+{% extends "base.html" %}
 {% block title %}Quote History{% endblock %}
-
 {% block content %}
-
-<p>Quote History</p>
-<style>
-    table, th, td {
-      border:1px solid black;
-    }
-    th{
-        font-weight:normal;
-    }
-</style>
-<p><table style="width:40%">
-    <tr>
-        <th>Client</th>
-        <th>Date of Purchase</th>
-        <th>Price per Gallon</th>
-        <th>Type of Fuel</th>
-        <th>Quantity</th>
-    </tr>
-    <tr>
-        <th>Justin Liang</th>
-        <th>1/20/2023</th>
-        <th>$2.88</th>
-        <th>Gas</th>
-        <th>11 gallon</th>
-    </tr>
-    <tr>
-        <th>Andrew Castro</th>
-        <th>11/25/2022</th>
-        <th>$3.88</th>
-        <th>Gas</th>
-        <th>5 gallon</th>
-    </tr>
-    <tr>
-        <th>Cristopher Torres</th>
-        <th>5/18/2020</th>
-        <th>$3.88</th>
-        <th>Diesel</th>
-        <th>20 gallon</th>
-    </tr>
-    <tr>
-        <th>Chuer Zhang</th>
-        <th>12/28/2021</th>
-        <th>$3.58</th>
-        <th>Gas</th>
-        <th>7 gallon</th>
-    </tr>
-    <tr>
-        <th><br></th>
-        <th><br></th>
-        <th><br></th>
-        <th><br></th>
-        <th><br></th>
-    </tr>
-    <tr>
-        <th><br></th>
-        <th><br></th>
-        <th><br></th>
-        <th><br></th>
-        <th><br></th>
-    </tr>
-    <tr>
-        <th><br></th>
-        <th><br></th>
-        <th><br></th>
-        <th><br></th>
-        <th><br></th>
-    </tr><tr>
-        <th><br></th>
-        <th><br></th>
-        <th><br></th>
-        <th><br></th>
-        <th><br></th>
-    </tr><tr>
-        <th><br></th>
-        <th><br></th>
-        <th><br></th>
-        <th><br></th>
-        <th><br></th>
-    </tr><tr>
-        <th><br></th>
-        <th><br></th>
-        <th><br></th>
-        <th><br></th>
-        <th><br></th>
-    </tr>
-    
-</table></p>
-
-
-
+    <h2>Quote History</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Gallons Requested</th>
+                <th>Delivery Address</th>
+                <th>Delivery Date</th>
+                <th>Price per Gallon</th>
+                <th>Total Amount Due</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for quote in quotes %}
+            <tr>
+                <td>{{ quote.id }}</td>
+                <td>{{ quote.gallons_requested }}</td>
+                <td>{{ quote.delivery_address }}</td>
+                <td>{{ quote.delivery_date.strftime('%Y-%m-%d') }}</td>
+                <td>{{ "%.2f"|format(quote.price_per_gallon) }}</td>
+                <td>{{ "%.2f"|format(quote.total_amount_due) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}
