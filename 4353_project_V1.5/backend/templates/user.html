@@ -11,8 +11,16 @@
 <form action = "#" method = "POST">
     <input type = "email" name = "email" placeholder="Enter Email" value = "{{email if email}}"/>
     <input type = "submit" value = "submit"/>
-<form>
-<form action="{{ url_for('delete') }}">
-    <input type="submit" value="Delete my record" >
 </form>
+
+<!-- Option 1: Form with submit button ADDED--> 
+<form action="{{ url_for('delete') }}" method="POST">
+    <input type="submit" value="Delete Account" onclick="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
+</form>
+
+<!-- Option 2: Anchor tag with onclick confirmation message ADDED-->
+<a href="{{ url_for('delete') }}" onclick="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">Delete My Account</a>
+
+<a href="{{ url_for('logout') }}">Logout</a>
+  
 {% endblock %}
