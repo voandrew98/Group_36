@@ -11,6 +11,7 @@
                 <th>Delivery Date</th>
                 <th>Price per Gallon</th>
                 <th>Total Amount Due</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -22,8 +23,14 @@
                 <td>{{ quote.delivery_date.strftime('%Y-%m-%d') }}</td>
                 <td>{{ "%.2f"|format(quote.price_per_gallon) }}</td>
                 <td>{{ "%.2f"|format(quote.total_amount_due) }}</td>
+                <td>
+                    <form action="{{ url_for('delete_quote', quote_id=quote.id) }}" method="POST">
+                        <input type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this quote?');">
+                    </form>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 {% endblock %}
+
