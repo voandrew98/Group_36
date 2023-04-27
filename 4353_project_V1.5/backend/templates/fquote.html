@@ -1,34 +1,74 @@
-{% extends "base.html" %} 
+{% extends "base.html" %}
 {% block title %}Fuel Quote{% endblock %}
 
 {% block content %}
-<form>
+<form id="fuel-quote-form" action="{{ url_for('fquote') }}" method="POST">
     <p></p>
 
-<div>
-    <label for="totalAmt">Gallons Requested:</label><br>
-    <input type="number" id="totalAmt" step="any"></input>
-</div>
+    <div>
+        <label for="gallons_requested">Gallons Requested:</label><br>
+        <input type="number" name="gallons_requested" id="gallons_requested" step="any" required></input>
+    </div>
 
-<div>
-    <label for="addy">Address:</label><br>
-    <input type="text" id="addy" name="addy" readonly>
-</div>
+    <div>
+        <label for="delivery_address">Address:</label><br>
+        <input type="text" name="delivery_address" id="delivery_address" required>
+    </div>
 
-<div>
-    <label for="date">Date:</label><br>
-    <input type="datetime-local" id="Test_DatetimeLocal">
-</div>
+    <div>
+        <label for="delivery_date">Date:</label><br>
+        <input type="date" name="delivery_date" id="delivery_date" required>
+    </div>
 
-<div>
-    <label for="sprice">Suggested Price/Gallon:</label><br>
-    <input type="number" id="sprice" step="any" readonly>
-</div>
+    <div>
+        <label for="price_per_gallon">Suggested Price/Gallon:</label><br>
+        <input type="number" name="price_per_gallon" id="price_per_gallon" step="any" readonly>
+    </div>
 
-<div>
-    <label for="tprice">Total Cost:</label><br>
-    <input type="number" id="tprice" step="any" readonly>
-</div>
+    <div>
+        <label for="total_amount_due">Total Cost:</label><br>
+        <input type="number" name="total_amount_due" id="total_amount_due" step="any" readonly>
+    </div>
 
-  </form>
+    <div>
+        <button type="button" id="get-quote">Get Quote</button>
+        <input type="submit" value="Submit Quote" disabled>
+    </div>
+
+</form>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const getQuoteButton = document.getElementById("get-quote");
+        const fuelQuoteForm = document.getElementById("fuel-quote-form");
+        const gallonsRequestedInput = document.getElementById("gallons_requested");
+        const deliveryDateInput = document.getElementById("delivery_date");
+        const pricePerGallonInput = document.getElementById("price_per_gallon");
+        const totalAmountDueInput = document.getElementById("total_amount_due");
+        const submitButton = fuelQuoteForm.querySelector("input[type='submit']");
+    
+        getQuoteButton.addEventListener("click", function() {
+            const gallonsRequested = parseFloat(gallonsRequestedInput.value);
+            const inState = true; // Update this based on the user's location
+            const hasHistory = true; // Update this based on the user's quote history
+    
+            const locationFactor = inState ? 0.02 : 0.04;
+            const rateHistoryFactor = hasHistory ? 0.01 : 0;
+            const gallonsRequestedFactor = gallonsRequested > 1000 ? 0.02 : 0.03;
+            const companyProfitFactor = 0.1;
+    
+            const currentPrice = 1.5;
+            const margin = currentPrice * (locationFactor - rateHistoryFactor + gallonsRequestedFactor + companyProfitFactor);
+            const suggestedPrice = currentPrice + margin;
+            const totalAmountDue = gallonsRequested * suggestedPrice;
+    
+            pricePerGallonInput.value = suggestedPrice.toFixed(2);
+            totalAmountDueInput.value = totalAmountDue.toFixed(2);
+    
+            submitButton.disabled = false;
+        });
+    });
+    </script>
+    
 {% endblock %}
