@@ -9,19 +9,23 @@
     {% endfor %}
 {% endif %}
 {% endwith %}
-<form action = "#" method = "post">
+<form action="{{ url_for('register') }}" method="POST">
 <p></p>
 <div>
+<label for="email">Email:</label>
+<p><input type="email" name="email" placeholder="Email" required></p>
+</div>
+<div>
 <label for="username">Create Username:</label>
-<p><input type = "text" name="nm" /></p>
+<p><input type="text" name="username" placeholder="Username" required></p>
 </div>
 
 <div>
 <label for="pass">Create Password (8 characters minimum):</label>
-<p><input type = "password" id="pass" name="password"
+<p><input type="password" id="pass" name="password"
 minlength="8" required></p>
 </div>
 
-<p><input type = "submit" value="Sign Up" /></p>
+<p><input type="submit" value="Sign Up" /></p>
 </form>
 {% endblock %}
