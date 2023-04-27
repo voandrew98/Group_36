@@ -6,15 +6,15 @@ from datetime import datetime
 app = Flask(__name__)
 app.secret_key = "hello"
 app.permanent_session_lifetime = timedelta(minutes=5)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db' #added
-db = SQLAlchemy(app) #added
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+db = SQLAlchemy(app)
 
-class User(db.Model): #added
+class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
 
-class FuelQuote(db.Model): #added
+class FuelQuote(db.Model): 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     gallons_requested = db.Column(db.Float, nullable=False)
@@ -118,7 +118,6 @@ def fquote():
         flash("You are not logged in!")
         return redirect(url_for("login"))
 
-
 @app.route("/hquote", methods=["POST", "GET"]) #added
 def hquote():
     if "user" in session:
@@ -129,10 +128,6 @@ def hquote():
     else:
         flash("You are not logged in!")
         return redirect(url_for("login"))
-
-@app.route("/view", methods=["POST", "GET"])
-def view():
-    return render_template("view.html")
 
 @app.route("/delete", methods=["POST"]) #added
 def delete():
@@ -149,10 +144,52 @@ def delete():
     else:
         flash(f"You are not logged in!", "warning")
     return redirect(url_for("home"))
+
 #    Check if the user is logged in.
 #    If the user is logged in, delete their account from the database.
 #   Remove their session data and log them out.
 #   Redirect them to the home page with a flash message indicating that their account has been deleted.
+
+#FINAL NEED TO COMMIT - ADDED RECENTLY. ALSO IN USER.HTML
+
+@app.route("/edit_profile", methods=["POST", "GET"])
+def edit_profile():
+    if "user" in session:
+        user = session["user"]
+        found_user = User.query.filter_by(username=user).first()
+
+        if request.method == "POST":
+            new_username = request.form["new_username"]
+            new_email = request.form["new_email"]
+            found_user.username = new_username
+            found_user.email = new_email
+            db.session.commit()
+            session["user"] = new_username
+            flash("Profile updated successfully!")
+            return redirect(url_for("user"))
+        else:
+            return render_template("edit_profile.html", user=found_user)
+    else:
+        flash("You are not logged in!")
+        return redirect(url_for("login"))
+    
+@app.route("/delete_quote/<int:quote_id>", methods=["POST"])
+def delete_quote(quote_id):
+    if "user" in session:
+        user = session["user"]
+        found_user = User.query.filter_by(username=user).first()
+        quote = FuelQuote.query.filter_by(id=quote_id, user_id=found_user.id).first()
+        if quote:
+            db.session.delete(quote)
+            db.session.commit()
+            flash("Fuel quote deleted successfully!")
+        else:
+            flash("Error: Unable to delete the fuel quote.", "error")
+        return redirect(url_for("hquote"))
+    else:
+        flash("You are not logged in!")
+        return redirect(url_for("login"))
+
 
 if __name__ == "__main__":
     with app.app_context(): #added
