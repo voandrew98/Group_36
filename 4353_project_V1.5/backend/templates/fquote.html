@@ -47,7 +47,9 @@
         const pricePerGallonInput = document.getElementById("price_per_gallon");
         const totalAmountDueInput = document.getElementById("total_amount_due");
         const submitButton = fuelQuoteForm.querySelector("input[type='submit']");
-    
+        const today = new Date().toISOString().split("T")[0];
+        deliveryDateInput.setAttribute("min", today);
+        
         getQuoteButton.addEventListener("click", function() {
             const gallonsRequested = parseFloat(gallonsRequestedInput.value);
             const inState = true; // Update this based on the user's location
